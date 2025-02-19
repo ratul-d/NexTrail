@@ -3,67 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexTrail</title>
-    <link rel="icon" type="image/x-icon" href="./img/NexTrail.png">
-    <link rel="stylesheet" href="./output.css">
+    <title>NexTrail - Elevate Your Career</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-black text-gray-100 font-sans">
 
-<header class="bg-black shadow">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        /* Gradient Overlay for Better Visibility */
+        .gradient-overlay {
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 10%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.1) 90%);
+        }
+
+        /* Smooth fade-in animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 1s ease-out;
+        }
+
+        /* Custom Button Styling */
+        .btn-primary {
+            @apply inline-block px-8 py-4 bg-blue-600 text-white text-lg font-semibold rounded-full transition transform hover:bg-blue-700 hover:scale-105 shadow-lg;
+        }
+
+        /* Smooth fade-in animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 1s ease-out;
+        }
+
+        /* Custom Button Styling */
+        .btn-primary {
+            @apply inline-block px-8 py-4 bg-blue-600 text-white text-lg font-semibold rounded-full transition transform hover:bg-blue-700 hover:scale-105 shadow-lg;
+        }
+
+        /* Smooth fade-in animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 1s ease-out;
+        }
+
+        /* Custom button hover effects */
+        .btn-primary {
+            @apply bg-blue-600 text-white px-6 py-3 rounded-full text-lg font-semibold transition transform hover:bg-blue-700 hover:scale-105;
+        }
+
+
+    </style>
+</head>
+<body class="bg-gray-950 text-gray-100">
+
+<!-- Navigation -->
+<header class="fixed top-0 left-0 w-full bg-gray-900 bg-opacity-80 backdrop-blur-md shadow-lg z-50">
     <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-        <div class="text-2xl font-bold text-gray-100">
-            <a href="./index.html"><img src="./img/NexTrail-removebg-preview.png" class="w-32 h-auto"></a>
+        <a href="#" class="text-3xl font-bold tracking-wide text-blue-400"><img src="./img/NexTrail-removebg-preview.png" alt="" class="w-32 h-auto"></a>
+
+        <nav class="hidden lg:flex space-x-8">
+            <a href="#" class="nav-link">Home</a>
+            <a href="#" class="nav-link">Community</a>
+        </nav>
+
+        <div class="hidden lg:flex space-x-4">
+            <a href="./Login.html" class="nav-link">Login</a>
+            <a href="./signup.html" class="btn-primary">Sign Up</a>
         </div>
-        
+
         <button id="menu-toggle" class="lg:hidden text-gray-300 focus:outline-none">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
             </svg>
         </button>
-
-        <nav id="nav-menu" class="hidden lg:flex space-x-6">
-            <a href="#" class="text-gray-300 hover:text-gray-100">Home</a>
-            <a href="#" class="text-gray-300 hover:text-gray-100">Job Trend</a>
-            <a href="#" class="text-gray-300 hover:text-gray-100">Community</a>
-            <a href="#" class="text-gray-300 hover:text-gray-100">Resume Flow</a>
-        </nav>
-        
-        <div class="hidden lg:flex space-x-4">
-            <button class="text-gray-300 hover:text-gray-100">
-                <a href="./Login.html">Login</a>
-            </button>
-            <button class="text-gray-300 hover:text-gray-100 bg-blue-600 px-4 py-2 rounded-lg">
-                <a href="./signup.html">Sign-up</a>
-            </button>
-        </div>
     </div>
 
-    <div id="mobile-menu" class="hidden flex flex-col items-center lg:hidden bg-black text-white py-4 space-y-4">
-        <a href="#" class="text-gray-300 hover:text-gray-100">Home</a>
-        <a href="#" class="text-gray-300 hover:text-gray-100">Job Trend</a>
-        <a href="#" class="text-gray-300 hover:text-gray-100">Community</a>
-        <a href="#" class="text-gray-300 hover:text-gray-100">Resume Flow</a>
-        <a href="./Login.html" class="text-gray-300 hover:text-gray-100">Login</a>
-        <a href="./signup.html" class="text-gray-300 hover:text-gray-100 bg-blue-600 px-4 py-2 rounded-lg">Sign-up</a>
+    <div id="mobile-menu" class="hidden flex flex-col items-center lg:hidden bg-gray-900 text-white py-4 space-y-4">
+        <a href="#" class="nav-link">Home</a>
+        <a href="#" class="nav-link">Features</a>
+        <a href="#" class="nav-link">Community</a>
+        <a href="#" class="nav-link">Pricing</a>
+        <a href="Login.html" class="nav-link">Login</a>
+        <!-- <a href="signup.html" class="btn-primary">Sign Up</a> -->
+        <a href="signup.html">Sign Up</a>
     </div>
 </header>
 
-<section class="relative bg-cover bg-center bg-fixed py-20 min-h-screen flex items-center justify-center text-center" style="background-image: url('./img/bg.jpg');">
-    <div class="absolute inset-0 bg-black opacity-50"></div> 
-    <div class="relative z-10 text-white container mx-auto px-6">
-        <h1 class="text-5xl font-bold mb-5">Welcome to NexTrail</h1>
-        <p class="text-2xl mb-8">Your One-stop Platform for <span id="animated-text" class="bg-white rounded-xl text-black p-2"></span></p>
-        <a href="./Login.html" class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 font-bold">Get Started</a>
+<!-- Hero Section with Video Background -->
+<!-- Hero Section with Video Background -->
+<section class="relative flex items-center justify-center h-screen text-center bg-black">
+    <!-- Background Video (Use your local video path here) -->
+    <video class="hero-video" autoplay loop muted playsinline>
+        <source src="../video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Gradient Overlay -->
+    <div class="absolute inset-0 gradient-overlay"></div>
+
+    <div class="relative z-10 max-w-3xl px-6 animate-fade-in">
+        <h1 class="text-6xl font-extrabold tracking-wide">Your Future, Your Career</h1>
+        <p class="mt-6 text-xl opacity-90">AI-powered career guidance, expert mentorship, and smarter job recommendations.</p>
+        
+        <!-- Get Started Button -->
+        <a href="./Login.html" class="mt-8 inline-block px-8 py-4 bg-blue-600 text-white text-lg font-semibold rounded-full transition transform hover:bg-blue-700 hover:scale-105 shadow-lg">
+            Get Started For Free
+        </a>
+    </div>
+</section>
+<!-- Features Section -->
+<section class="container mx-auto px-6 py-24">
+    <h2 class="text-4xl font-bold text-center mb-12 animate-fade-in">Why Choose NexTrail?</h2>
+    <div class="grid md:grid-cols-3 gap-12">
+        <div class="feature-card">
+            <img src="./img/insight-svgrepo-com.svg" class="w-10 mx-auto mb-4">
+            <h3 class="text-2xl font-semibold text-center">AI Career Insights</h3>
+            <p class="opacity-80">Data-driven insights to map your career path.</p>
+        </div>
+        <div class="feature-card">
+            <img src="./img/icons8-professional-50 (1).png" class="w-10 mx-auto mb-4">
+            <h3 class="text-2xl font-semibold text-center">Professional Network</h3>
+            <p class="opacity-80">Grow with industry mentors & professionals.</p>
+        </div>
+        <div class="feature-card">
+            <img src="./img/resume.png" class="w-10 mx-auto mb-4">
+            <h3 class="text-2xl font-semibold text-center">Resume Booster</h3>
+            <p class="opacity-80">ATS-friendly resumes that land interviews.</p>
+        </div>
     </div>
 </section>
 
+<!-- Call to Action -->
+<section class="text-center py-20 bg-gray-800">
+    <h2 class="text-4xl font-bold animate-fade-in">Start Your Career Journey Today</h2>
+    <p class="mt-4 text-lg opacity-80">Join thousands of professionals using NexTrail to level up their careers.</p>
+    <a href="#" class="mt-8 btn-primary">Sign Up Now</a>
+</section>
+
+<!-- Footer -->
+<footer class="bg-gray-900 py-10 text-center">
+    <p class="text-gray-400">&copy; 2025 NexTrail. All rights reserved.</p>
+</footer>
+
+<!-- JavaScript -->
 <script>
     document.getElementById('menu-toggle').addEventListener('click', function() {
         document.getElementById('mobile-menu').classList.toggle('hidden');
     });
 </script>
 
-<script src="./Typewriter.js"></script>
 </body>
 </html>
