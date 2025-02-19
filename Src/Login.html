@@ -44,7 +44,7 @@
                 try {
                     const userCredential = await signInWithEmailAndPassword(auth, email, password);
                     alert("Login Successful!");
-                    window.location.href = "./dashboard.html"; 
+                    window.location.href = "./dashbord.html"; 
                 } catch (error) {
                     console.error("Login error:", error.message);
                     alert("Invalid email or password. Please try again.");
@@ -138,7 +138,7 @@
                 </div>
 
                 <!-- Proper Login Button -->
-                <a href="./dashboard.html"><button type="submit" class="mt-8 inline-block px-8 py-4 bg-blue-600 text-white text-md font-medium rounded transition transform hover:bg-blue-700 hover:scale-105 shadow-lg">Login</button></a>
+                <a href="dashbord.html"><button type="submit" class="mt-8 inline-block px-8 py-4 bg-blue-600 text-white text-md font-medium rounded transition transform hover:bg-blue-700 hover:scale-105 shadow-lg">Login</button></a>
             </form>
 
             <!-- F            <div class="text-center text-gray-300 mt-4">
