@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Community Chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/x-icon" href="./img/NexTrail.png">
+    <style>
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #4A5568;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #2D3748;
+        }
+    </style>
+</head>
+<body class="h-screen flex bg-gray-900 text-white">
+
+    <!-- Sidebar for Communities -->
+    <div class="w-64 bg-gray-800 p-4 flex flex-col">
+        <h2 class="text-2xl font-bold mb-4">Communities</h2>
+        <div id="communityList" class="space-y-2 overflow-y-auto flex-1"></div>
+        
+        <!-- Create New Community -->
+        <input id="communityInput" class="w-full p-2 rounded bg-gray-700 text-white" placeholder="New Community Name">
+        <select id="privacySelect" class="w-full p-2 mt-2 rounded bg-gray-700 text-white">
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+        </select>
+        <button onclick="createCommunity()" class="w-full mt-2 bg-blue-500 p-2 rounded">Create</button>
+
+        <!-- Join Community -->
+        <input id="joinInput" class="w-full p-2 mt-4 rounded bg-gray-700 text-white" placeholder="Enter Invite Code">
+        <button onclick="joinCommunity()" class="w-full mt-2 bg-green-500 p-2 rounded">Join</button>
+    </div>
+
+    <!-- Main Chat Area -->
+    <div class="flex-1 flex flex-col">
+        <!-- Header -->
+        <div class="bg-gray-700 p-4 flex justify-between items-center">
+            <h2 id="communityName" class="text-lg font-semibold">Select a Community</h2>
+            <button id="inviteBtn" class="bg-yellow-500 p-2 rounded hidden" onclick="copyInviteCode()">Invite</button>
+        </div>
+
+        <!-- Chat Box -->
+        <div id="chatBox" class="flex-1 overflow-y-auto p-4 space-y-2 bg-gray-900"></div>
+
+        <!-- Message Input -->
+        <div class="p-4 bg-gray-800 flex">
+            <input id="messageInput" placeholder="Type a message..." class="flex-1 p-2 rounded bg-gray-700 text-white" onkeydown="handleKeyPress(event)">
+            <button onclick="sendMessage()" class="ml-2 bg-green-500 p-2 rounded">Send</button>
+        </div>
+    </div>
+
+    <script>
+        let currentCommunity = null;
+        const communities = {};
+        const userName = "You";
+
+        // Function to create a new community
+        function createCommunity() {
+            const communityName = document.getElementById('communityInput').value.trim();
+            const privacy = document.getElementById('privacySelect').value;
+
+            if (communityName && !communities[communityName]) {
+                const inviteCode = Math.random().toString(36).substr(2, 6); // Random invite code
+                communities[communityName] = { messages: [], privacy, inviteCode };
+
+                const communityList = document.getElementById('communityList');
+                const communityBtn = document.createElement('button');
+                communityBtn.textContent = `${communityName} (${privacy})`;
+                communityBtn.className = "w-full text-left p-2 rounded bg-gray-700 hover:bg-gray-600";
+                communityBtn.onclick = () => switchCommunity(communityName);
+                communityList.appendChild(communityBtn);
+
+                document.getElementById('communityInput').value = '';
+                switchCommunity(communityName);
+            }
+        }
+
+        // Function to switch between communities
+        function switchCommunity(name) {
+            currentCommunity = name;
+            document.getElementById('communityName').textContent = name;
+            document.getElementById('inviteBtn').classList.remove('hidden');
+            renderMessages();
+        }
+
+        // Send message to current community
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+
+            if (message && currentCommunity) {
+                communities[currentCommunity].messages.push(`${userName}: ${message}`);
+                messageInput.value = '';
+                renderMessages();
+            }
+        }
+
+        // Render messages in chat box
+        function renderMessages() {
+            const chatBox = document.getElementById('chatBox');
+            chatBox.innerHTML = '';
+            if (currentCommunity) {
+                communities[currentCommunity].messages.forEach(msg => {
+                    const msgDiv = document.createElement('div');
+                    msgDiv.textContent = msg;
+                    msgDiv.className = msg.startsWith(userName) ? "p-2 bg-blue-600 rounded self-end" : "p-2 bg-gray-700 rounded";
+                    chatBox.appendChild(msgDiv);
+                });
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }
+
+        // Handle "Enter" key for sending messages
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Copy Invite Code to Clipboard
+        function copyInviteCode() {
+            if (currentCommunity) {
+                const inviteCode = communities[currentCommunity].inviteCode;
+                navigator.clipboard.writeText(inviteCode).then(() => {
+                    alert(`Invite Code Copied: ${inviteCode}`);
+                });
+            }
+        }
+
+        // Join Community using Invite Code
+        function joinCommunity() {
+            const inviteCode = document.getElementById('joinInput').value.trim();
+            const communityEntry = Object.entries(communities).find(([name, data]) => data.inviteCode === inviteCode);
+
+            if (communityEntry) {
+                const [communityName] = communityEntry;
+                switchCommunity(communityName);
+                alert(`Joined "${communityName}"`);
+            } else {
+                alert("Invalid Invite Code");
+            }
+            document.getElementById('joinInput').value = '';
+        }
+    </script>
+
+</body>
+</html>
