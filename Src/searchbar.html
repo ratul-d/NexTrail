@@ -82,21 +82,21 @@
         const resultsDiv = document.getElementById("results");
         resultsDiv.innerHTML = "<h3 class='text-lg font-bold'>Suggested Job Roles, Click on role for Skill Learning Roadmap:</h3>";
         if (data.strong_roles.length > 0) {
-          resultsDiv.innerHTML += `<ul class="list-disc pl-5">${
+          resultsDiv.innerHTML += `<div class="grid grid-cols-5 gap-4 mt-4">${
             data.strong_roles.map(role =>
-              `<li class="cursor-pointer hover:underline" onclick="getRoadmapForRole('${role}')">${role}</li>`
+              `<div class="bg-gray-800 p-4 rounded-lg text-center cursor-pointer hover:underline" onclick="getRoadmapForRole('${role}')">${role}</div>`
             ).join("")
-          }</ul>`;
+          }</div>`;
         } else {
           resultsDiv.innerHTML += "<p>No strong matches found.</p>";
         }
         if (data.roadmap_suggestions && data.roadmap_suggestions.length > 0) {
           resultsDiv.innerHTML += "<h3 class='text-lg font-bold mt-4'>Additional Roadmap Suggestions:</h3>";
-          resultsDiv.innerHTML += `<ul class="list-disc pl-5">${
+          resultsDiv.innerHTML += `<div class="grid grid-cols-5 gap-4 mt-4">${
             data.roadmap_suggestions.map(role =>
-              `<li class="cursor-pointer hover:underline" onclick="getRoadmapForRole('${role}')">${role}</li>`
+              `<div class="bg-gray-800 p-4 rounded-lg text-center cursor-pointer hover:underline" onclick="getRoadmapForRole('${role}')">${role}</div>`
             ).join("")
-          }</ul>`;
+          }</div>`;
         }
       })
       .catch(error => console.error("Error:", error));
@@ -130,33 +130,32 @@
 
     // Generate a flowchart by sending the roadmap text to the /process endpoint and rendering a Mermaid diagram
     function generateFlowchart(text) {
-        fetch("http://127.0.0.1:5000/process", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: text })
-        })
-        .then(response => response.json())
-        .then(data => {
-            let mermaidDefinition = 'graph TD\n';
-            data.edges.forEach(edge => {
-                const fromNode = data.nodes.find(n => n.id === edge.from);
-                const toNode = data.nodes.find(n => n.id === edge.to);
-                mermaidDefinition += `  ${edge.from}["${fromNode.label.replace(/"/g, '\\"')}"] --> ${edge.to}["${toNode.label.replace(/"/g, '\\"')}"]\n`;
-    });
-    const flowchartContainer = document.getElementById('flowchartContainer');
-    flowchartContainer.innerHTML =
-      `<div class="mermaid">${mermaidDefinition}</div>`;
-    // Reveal the container
-    flowchartContainer.style.display = 'block';
-    try {
-      mermaid.init(undefined, document.querySelectorAll('.mermaid'));
-    } catch (initError) {
-      console.error("Error initializing Mermaid:", initError);
+      fetch("http://127.0.0.1:5000/process", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: text })
+      })
+      .then(response => response.json())
+      .then(data => {
+        let mermaidDefinition = 'graph TD\n';
+        data.edges.forEach(edge => {
+          const fromNode = data.nodes.find(n => n.id === edge.from);
+          const toNode = data.nodes.find(n => n.id === edge.to);
+          mermaidDefinition += `  ${edge.from}["${fromNode.label.replace(/"/g, '\\"')}"] --> ${edge.to}["${toNode.label.replace(/"/g, '\\"')}"]\n`;
+        });
+        const flowchartContainer = document.getElementById('flowchartContainer');
+        flowchartContainer.innerHTML =
+          `<div class="mermaid">${mermaidDefinition}</div>`;
+        // Reveal the container
+        flowchartContainer.style.display = 'block';
+        try {
+          mermaid.init(undefined, document.querySelectorAll('.mermaid'));
+        } catch (initError) {
+          console.error("Error initializing Mermaid:", initError);
+        }
+      })
+      .catch(error => console.error("Error generating flowchart:", error));
     }
-  })
-  .catch(error => console.error("Error generating flowchart:", error));
-}
-
   </script>
 </body>
 </html>
