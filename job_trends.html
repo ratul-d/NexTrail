@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Trends Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background-color: #0D1117; color: white; font-family: 'Poppins', sans-serif; }
+        .job-card { 
+            background: #161B22; padding: 20px; border-radius: 10px; 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer;
+        }
+        .job-card:hover { 
+            transform: scale(1.05); 
+            box-shadow: 0px 0px 15px rgba(0, 255, 255, 0.5);
+        }
+        .positive { color: #4CAF50; } /* Green for positive trends */
+        .negative { color: #FF5252; } /* Red for negative trends */
+        .chart-container { width: 100%; max-width: 800px; margin: auto; }
+        .filter-btn { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        .active { background: #3B82F6; }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen">
+
+    <!-- Heading -->
+    <h1 class="text-4xl font-bold mb-6 text-blue-400">📊 Live Job Trends Dashboard</h1>
+
+    <!-- Filter Buttons -->
+    <div class="mb-4">
+        <button class="filter-btn bg-gray-700 hover:bg-gray-600 text-white rounded" onclick="filterJobs('all')">All Jobs</button>
+        <button class="filter-btn bg-green-700 hover:bg-green-600 text-white rounded" onclick="filterJobs('positive')">📈 Rising Trends</button>
+        <button class="filter-btn bg-red-700 hover:bg-red-600 text-white rounded" onclick="filterJobs('negative')">📉 Declining Trends</button>
+    </div>
+
+    <!-- Job Cards -->
+    <div id="job-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4"></div>
+
+    <!-- Graph Section -->
+    <div class="chart-container mt-8">
+        <canvas id="jobChart"></canvas>
+    </div>
+
+    <script>
+        let jobs = [
+            { role: "Data Scientist", trend: 2.5, openings: 1200 },
+            { role: "Software Developer", trend: 3.8, openings: 2300 },
+            { role: "Machine Learning Engineer", trend: -1.2, openings: 950 },
+            { role: "Cybersecurity Analyst", trend: 4.1, openings: 1800 },
+            { role: "Cloud Engineer", trend: -2.5, openings: 750 },
+            { role: "DevOps Engineer", trend: 1.9, openings: 1600 },
+            { role: "AI Researcher", trend: -0.8, openings: 500 },
+            { role: "Blockchain Developer", trend: 3.2, openings: 900 },
+            { role: "Full-Stack Developer", trend: 2.0, openings: 2100 },
+            { role: "Data Engineer", trend: -3.5, openings: 700 }
+        ];
+
+        const container = document.getElementById("job-container");
+        let chartInstance = null;
+
+        // Function to display Job Cards
+        function displayJobs(filteredJobs) {
+            container.innerHTML = "";
+            filteredJobs.forEach(job => {
+                const div = document.createElement("div");
+                div.className = "job-card";
+                div.innerHTML = `
+                    <h2 class="text-xl font-bold">${job.role}</h2>
+                    <p class="text-lg ${job.trend >= 0 ? 'positive' : 'negative'}">
+                        Trend: ${job.trend}% ${job.trend >= 0 ? '📈' : '📉'}
+                    </p>
+                    <p class="text-gray-400">Openings: ${job.openings}</p>
+                `;
+                div.onclick = () => updateChart(job);
+                container.appendChild(div);
+            });
+        }
+
+        // Filter Jobs Based on Trend
+        function filterJobs(type) {
+            let filteredJobs = jobs;
+            if (type === "positive") filteredJobs = jobs.filter(job => job.trend > 0);
+            if (type === "negative") filteredJobs = jobs.filter(job => job.trend < 0);
+            displayJobs(filteredJobs);
+        }
+
+        // Initialize Chart
+        function createChart() {
+            const ctx = document.getElementById('jobChart').getContext('2d');
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: jobs.map(job => job.role),
+                    datasets: [
+                        {
+                            label: 'Trend %',
+                            data: jobs.map(job => job.trend),
+                            backgroundColor: jobs.map(job => job.trend >= 0 ? '#4CAF50' : '#FF5252'),
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Job Openings',
+                            data: jobs.map(job => job.openings),
+                            backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { labels: { color: "white" } }
+                    },
+                    scales: {
+                        x: { ticks: { color: "white" } },
+                        y: { ticks: { color: "white" }, beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        // Update Chart on Click
+        function updateChart(selectedJob) {
+            chartInstance.data.labels = [selectedJob.role];
+            chartInstance.data.datasets[0].data = [selectedJob.trend];
+            chartInstance.data.datasets[1].data = [selectedJob.openings];
+
+            chartInstance.data.datasets[0].backgroundColor = selectedJob.trend >= 0 ? '#4CAF50' : '#FF5252';
+            chartInstance.update();
+        }
+
+        // Initial Load
+        displayJobs(jobs);
+        createChart();
+    </script>
+
+</body>
+</html>
