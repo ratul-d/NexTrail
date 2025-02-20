@@ -1,152 +1,280 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Job Search | NexTrail</title>
-  <link rel="icon" type="image/x-icon" href="./img/NexTrail.png">
-  <link rel="stylesheet" href="./output.css">
-  <!-- Include Mermaid.js -->
-  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-  <script>
-    mermaid.initialize({ startOnLoad: true });
-  </script>
-</head>
-<body class="bg-black text-gray-100 font-sans">
-
-  <!-- Header Section -->
-  <header class="bg-black shadow">
-    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-      <div class="text-2xl font-bold text-gray-100">
-        <a href="./index.html"><img src="./img/NexTrail-removebg-preview.png" class="w-32 h-auto"></a>
-      </div>
-      <nav class="space-x-6">
-        <a href="./Home.html" class="text-gray-300 hover:text-gray-100">Home</a>
-        <a href="./templates/job.html" class="text-gray-300 hover:text-gray-100">Job Trend</a>
-        <a href="./community.html" class="text-gray-300 hover:text-gray-100">Community</a>
-      </nav>
-    </div>
-  </header>
-
-  <!-- Job Search Section -->
-  <section class="bg-black py-20">
-    <div class="container mx-auto px-6 text-center">
-      <h1 class="text-4xl font-bold mb-6">Enhance Your Skills</h1>
-      <p class="text-lg text-gray-300 mb-6">Enter your Skills and explore career opportunities.</p>
-
-      <!-- Search Bar -->
-      <div class="relative max-w-lg mx-auto">
-        <input type="text" id="jobSearch" class="w-full px-4 py-3 text-black bg-white rounded-lg focus:outline-2"
-               placeholder="Enter skills (comma-separated)..." onkeyup="getJobSuggestions()">
-        <button onclick="fetchJobRoles()" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg">Search</button>
-
-        <div id="suggestions" class="mt-2 bg-gray-800 text-white rounded-lg shadow-lg hidden">
-          <ul id="suggestionsList" class="p-2"></ul>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Job Search | NexTrail</title>
+    <link rel="icon" type="image/x-icon" href="./img/NexTrail.png" />
+    <link rel="stylesheet" href="./output.css" />
+    <!-- Include Mermaid.js -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+      mermaid.initialize({ startOnLoad: true });
+    </script>
+  </head>
+  <body class="bg-black text-gray-100 font-sans">
+    <!-- Header Section -->
+    <header class="bg-black shadow">
+      <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="text-2xl font-bold text-gray-100">
+          <a href="./index.html">
+            <img src="./img/NexTrail-removebg-preview.png" class="w-32 h-auto" />
+          </a>
         </div>
+        <nav class="space-x-6">
+          <a href="./Home.html" class="text-gray-300 hover:text-gray-100">Home</a>
+          <a href="#" class="text-gray-300 hover:text-gray-100">Job Trend</a>
+          <a href="./community.html" class="text-gray-300 hover:text-gray-100">Community</a>
 
-        <!-- Results Section -->
-        <div id="results" class="mt-4 text-white"></div>
-        <!-- Roadmap Section -->
-        <div id="roadmap" class="mt-4 text-white"></div>
-        <!-- Flowchart Container -->
-        <div id="flowchartContainer" style="display: none; background-color: white; padding: 20px; border: 1px solid #ccc; border-radius: 10px; margin-top: 20px;"></div>
+        </nav>
+
       </div>
-    </div>
-  </section>
+    </header>
 
-  <script>
-    // Fetch job roles based on user input
-    function fetchJobRoles() {
-      const skillsInput = document.getElementById("jobSearch").value;
-      const skills = skillsInput.split(",").map(skill => skill.trim()).filter(skill => skill.length > 0);
-      if (skills.length === 0) {
-        alert("Please enter at least one skill.");
-        return;
+    <!-- Job Search Section -->
+    <section class="bg-black py-20">
+      <div class="container mx-auto px-6 text-center">
+        <h1 class="text-4xl font-bold mb-6">Find Your Dream Job</h1>
+        <p class="text-lg text-gray-300 mb-6">
+          Enter your desired job role and explore career opportunities.
+        </p>
+
+        <!-- Registered Skills Container -->
+        <div id="registeredSkills" class="flex flex-wrap gap-2 mb-2 justify-center"></div>
+
+        <!-- Search Bar -->
+        <div class="relative max-w-lg mx-auto">
+          <input
+            type="text"
+            id="jobSearch"
+            class="w-full px-4 py-3 text-black bg-white rounded-lg focus:outline-2"
+            placeholder="Enter skills (comma-separated)..."
+            onkeyup="getJobSuggestions()"
+            onkeydown="handleKeyDown(event)"
+          />
+          <button
+            onclick="fetchJobRoles()"
+            class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg"
+          >
+            Search
+          </button>
+
+          <!-- Suggestions Dropdown -->
+          <div
+            id="suggestions"
+            class="mt-2 bg-gray-800 text-white rounded-lg shadow-lg hidden"
+          >
+            <ul id="suggestionsList" class="p-2"></ul>
+          </div>
+
+          <!-- Results Section -->
+          <div id="results" class="mt-4 text-white"></div>
+          <!-- Roadmap Section -->
+          <div id="roadmap" class="mt-4 text-white"></div>
+          <!-- Flowchart Container -->
+          <div
+            id="flowchartContainer"
+            style="display: none; background-color: white; padding: 20px; border: 1px solid #ccc; border-radius: 10px; margin-top: 20px;"
+          ></div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      // Valid word list used for the suggestion system
+      const validWordList = ['Nexus', 'Synthesis', 'Data Quality', 'Thermal Analysis', 'VPN', 'High-Speed Design', 'Threat Intelligence', 'Quantum Software Development', 'Advanced Custom Fields', 'Verification', 'Cloud Computing (AWS, Azure, GCP)', 'Network Protocols (TCP/IP, UDP)', 'Maintenance', 'LAN/WAN Design', 'Objective-C', 'DynamoDB', 'Hybrid Quantum-Classical Algorithms', 'Multiplayer Systems', 'Data Wrangling', 'Real-Time Processing', 'Multithreading', 'Security Orchestration, Automation, and Response (SOAR)', 'Quantum Gates', 'EIGRP', 'IoT Security', 'System Integration', 'State Management', 'Backup Solutions', 'Mentor Graphics', 'Digital Electronics', 'Linux/Unix Administration', 'Secure Coding Practices', 'Sensors and Actuators', 'Asset Pipelines', 'EDA Tools', 'Postman', 'Procurement', 'SOA', 'Text Summarization', 'Agile Methodologies', 'Grafana', 'Image Processing', 'Blending Techniques', 'Cross-Site Scripting', 'ARM Templates', 'Game Engines', 'Cadence', 'Physically Based Rendering', 'Cloud Monitoring', 'Device Drivers', '3D Audio', 'Model Optimization', '3D Mathematics', 'Cryogenics', 'Public Key Infrastructure', 'Signal Compression', 'Coverage Metrics', 'LSTM', 'AWS/Azure/GCP Security Tools', 'Flask', 'STA', 'Design Systems', 'AI/ML Integration', 'Monitoring Tools', 'Graph Theory', 'SSAS', 'Lighting Models', 'Hardening Techniques', 'Accessibility Standards', 'Data Reporting', 'Motion Capture', 'Zero Trust Model', 'Privileged Access Management', 'Data Streaming', 'Application Servers (WebLogic, WebSphere)', 'Offline Storage', 'Hardware-Software Integration', 'UX Research', 'Kanban', 'Enterprise Integration Patterns', 'Incident Management', 'Data Annotation', 'Algorithms', 'Phantom Wallet', 'Embedded Debugging', 'Data Storytelling', 'Wireless Networking', 'Network Automation', 'Truffle', 'Prototyping', 'Remote Support', 'HLSL', 'Network Hardware Installation', 'Word Embeddings', 'Experimentation Frameworks', 'Puppet', 'Edge Orchestration', 'Verification Methodologies', 'Firebase', 'CAD Software', 'Character Design', 'Encryption Techniques', 'Clustering', 'Data Visualization Best Practices', 'Quantum Assembly', 'SNMP', 'SAN', 'Color Theory', 'Ensemble Methods', 'CMOS', 'InVision', 'WP-CLI', 'UART', 'REST APIs', 'Database Optimization', 'Data Augmentation', 'Usability Testing', 'HIPAA', 'Security and Encryption', 'Packet Analysis', 'System Programming', 'Fiber Optics', 'Qiskit', 'Text Classification', 'Cloud Security', 'Smart Contract Development', 'Web Accessibility', 'Technical Troubleshooting', 'OpenZeppelin', 'Vue.js', 'DHCP', 'Oculus SDK', 'Responsive Design', 'Normalization', 'I2C', 'Cost Management', 'Shell Scripting', 'JIRA', 'ggplot2', 'Logic Analyzer', 'Quantum Hardware', 'Lambda Functions', 'GPU Programming', 'Web Scraping', 'Token Standards (ERC-20, ERC-721)', 'Algorithm Development', 'Hardware Interfacing', 'Swift', 'Fog Computing', 'VoIP', 'Diagnostic Tools', 'Akka', 'Instrumentation', 'Quantum Annealing', 'Spinnaker', 'Filter Design', 'Robotics', 'Systems Programming', 'Reporting Skills', 'Molecular Modeling', 'Smart Contract Deployment', 'Partitioning', 'SPI', 'Compositing', 'Airflow', 'Blue-Green Deployment', 'Oscilloscope', 'Firmware Security', 'Embedded AI/ML Basics', 'IoT Edge Computing', 'ARCore', 'Lua', 'Spatial Computing', 'Scikit-learn', 'Cosmos SDK', 'Altium Designer', 'Virtual Networking', 'OpenAI Gym', 'Environmental Monitoring', 'Fourier Transform', 'Cloud Platforms (AWS IoT, Azure IoT)', 'Simulation Environments', 'Unity', 'Data Modeling', 'Gin', 'Data Communication', 'API Management', 'Polkadot', 'Unreal Engine', 'Wavelet Transform', 'Jest', 'OpenCL', 'ZBrush', 'Memory Management', 'REST API', 'Experimentation', 'Play Framework', 'Universal Verification Methodology', 'Machine Learning for Graphics', 'Performance Optimization', 'Scalability', 'Cloud Storage Solutions', 'Embedded Systems', 'Regulatory Compliance', 'Real-Time Systems', 'Testbenches', 'Blueprints', 'Localization', 'Presto', 'DevOps Practices', 'In-App Purchases Integration', 'PHP', 'Resource Optimization', 'Solidity', 'Interconnects', 'Quantum Teleportation', 'Gazebo', 'Metadata Management', 'PCIe', 'Electrical Systems', 'Semiconductor Physics', 'Formal Verification', 'Analog Circuit Design', 'DirectX', 'Computer Vision Algorithms', 'Next.js', 'Babel', 'Security Operations Center', 'Database Scaling', 'Schematics Reading', 'Mixed Reality Toolkit', 'C#', 'Blockchain Analytics', 'Proof of Stake', 'Network Architecture', 'Sharding', 'Perl', 'Penetration Testing', 'Autonomous Drones', 'Security Awareness Training', 'NLTK', 'Bare-Metal Programming', 'Antivirus Solutions', 'Adobe Creative Suite', 'VR/AR Graphics', '3D Modeling', 'Visual Design', 'Low-Level Programming', 'Eagle', 'Collaborative Filtering', 'Security Architecture', 'Hyperparameter Tuning', 'Cloud Migration Strategies', 'React Native', 'Data Presentation', 'Firewall Configuration', 'Consensus Mechanisms', 'Godot', 'Data Cleaning', 'Substrate', 'Technical Training', 'Data Compliance', 'Database Monitoring', 'Character Rigging', 'Reporting Tools', 'Cloud Cost Optimization', 'RTL Design', 'Elasticsearch', 'Data Structures', 'Figma', 'Bootstrap', 'OSPF', 'Quantum Circuit Design', 'Edge Computing Frameworks', 'Security Awareness Programs', 'Game Physics', 'Confluence', 'Vendor Management', 'Attention Mechanisms', 'Real-Time Simulation', 'Space Complexity Analysis', 'Distributed Ledger Technology', 'Neural Networks', 'Text Preprocessing', 'Cinematics', 'Test Automation', 'Multi-Voltage Design', 'Inverse Kinematics', 'Web Application Firewalls', 'Svelte', 'Firmware Validation', 'Looker', 'ARIMA', 'XML', 'PyTorch', 'Blender', 'Express', 'Chef', 'Containerization (Docker, Kubernetes)', 'Debugging', 'Quantum Monte Carlo', 'Reinforcement Learning', 'Problem-Solving', 'Oracle', 'Wireless Communication', 'Calculus', 'Character Animation', 'System Design', 'Tensor Networks', 'Embedded Analytics', 'Pathfinding', 'Hydraulics', 'Named Entity Recognition', 'ETL', 'Scripting Tools', 'Typography', 'UI/UX Principles', 'Knowledge Graphs', 'Low-Power Design', 'Endpoint Security', 'Compute Shaders', 'PCB Materials', 'Kubernetes Security', 'a11y', 'Audio Programming', 'Embedded GUI', 'Serverless Computing', 'Defense in Depth Strategies', 'Content-Based Filtering', 'Threat Modeling', 'Blockchain', 'Edge Device Management', 'Secure Software Development Lifecycle', 'Embedded Testing Frameworks', 'Domain-Driven Design', 'Prompt Engineering', 'Coreference Resolution', 'Data Analytics', 'Data Monitoring', 'API Development', 'Data Processing', 'HTC Vive', 'Forecasting', 'Hardware Integration', 'Predictive Modeling', 'Networking Basics', '3D Graphics', 'Smart Contract Design Patterns', 'Compliance', 'VR/AR Design', 'SQLite', 'Signal Processing', 'Matrix Factorization', 'Backup Strategies', 'Database Migration', 'Bayesian Statistics', 'Player Psychology', 'Enterprise Architecture', 'Webpack', 'Decoherence Mitigation', 'Industrial Protocols', 'Sensor Calibration', 'Speech Recognition', 'VLANs', 'AI Governance', 'Root Cause Analysis', 'Scala', 'Build Automation Tools', 'Databricks', 'Anyons', 'API Design', 'Virtual Disks', 'Version Control Systems', 'Compliance Standards (GDPR, HIPAA)', 'Transformers', 'Synopsys', 'Ray Tracing', 'Network Design', 'Information Hierarchy', 'APIs', 'Load Balancers', 'Redshift', 'Security', 'Rigging', 'Circuit Design', 'Configuration Management (Ansible, Puppet)', 'Auto-Scaling', 'Decentralized Finance', 'AXI Protocol', 'EOS.IO', 'Firewall Management', 'Scikit-Learn', 'Container Orchestration', 'Container Security', 'Team Collaboration', 'Docker Security', 'Quantum Networks', 'Swagger', 'Game Design Principles', 'SAST', 'IoT Basics', 'Firmware Testing', 'Optical Flow', 'Collision Detection', 'Quantum Optics', 'LiDAR', 'LangChain', 'Business Intelligence Tools', 'Mechanical Systems', 'Game Testing', 'Model Evaluation', 'Compliance Tools', 'Fluid Dynamics', 'Monitoring and Logging', 'Information Architecture', 'Druid', 'PCB Design Software', 'GitHub', 'Michelson', 'CUDA', 'Quil', 'Bootloader Development', 'Vyper', 'Multiplayer Networking', 'Concurrency Handling', 'Stored Procedures', 'Context API', 'iOS SDK', 'Documentation', 'Data Insights', 'VR SDKs', 'Cyber Threat Analysis', 'Superconducting Qubits', 'SPI/I2C/UART', 'Kafka', 'Design for Testability', 'SOAP', 'Mobile Hardware Constraints', 'Digital Signal Processing', 'Interactive Music Systems', 'MPLS', 'Game Mechanics', 'Model Deployment', 'Reliability Engineering', 'HTML', 'Game AI', 'OAuth', 'Chainlink', 'ArgoCD', 'Remix IDE', 'Substance Painter', 'Message Queues (Kafka, RabbitMQ)', 'Embedded Tools', 'Substance Designer', 'Serverless Architecture', 'SLAM', 'Ethical AI', 'Machine Learning', 'Blockchain Governance', 'Hybrid Infrastructure', 'Service Mesh', 'Database Connectivity', 'Bootloaders', 'Impedance Control', 'Google Cloud Platform Security', 'Microservices Security', 'IT Infrastructure', 'Tendermint', '3D Modeling Basics', 'Blockchain Scalability', 'Cybersecurity', 'Data Privacy Regulations', 'CMake', 'Data Interpretation', 'AutoCAD', 'Blockchain Protocols', 'Monitoring and Alerting', 'Signal Reconstruction', 'Patch Management', 'Spark', 'Cryptographic Hashing', 'PL/SQL', 'Peer-to-Peer Networks', 'DAST', 'Backup and Recovery', 'Shader Programming', 'Security Scanning', 'Data Archiving', 'Edge Deployment Strategies', 'Secure SDLC', 'Pandas', 'ASP.NET Core', 'Quantum Noise Modeling', 'Network Security', 'Troubleshooting & Debugging', 'Generative Models', 'Subnetting', 'Cloud Networking', 'Hardware Abstraction Layers', 'Content Strategy', 'Governance Frameworks', 'GitHub Actions', 'Part-of-Speech Tagging', 'Embedded Software Optimization', 'RTL Coding', 'Virtualization Technologies', 'Embedded Storage', 'Linux/Unix Systems', 'Time Series Analysis', 'DevOps', 'BigQuery', 'NFT Development', 'Log Analysis', 'Reliability Analysis', 'Mapping', 'Embedded C', 'Redis', 'GANs', 'Time Complexity Analysis', 'Emulation', 'ASP.NET', 'T-SQL', 'Design Verification', 'Plotly', 'Animation Systems', 'DDR', 'Convolutional Neural Networks', 'IPC Standards', 'Cloud Workload Protection', 'JTAG', 'HVAC Systems', 'Motion Graphics', 'Infrastructure Monitoring', 'Data Analysis', 'Social Engineering Defense', 'Android Development', 'Electromigration Analysis', 'ASIC Flow', 'Project Management', 'Schema Design', 'Active Directory', 'PCB Design', 'AI for Animation', 'Radar Signal Processing', 'Level Design', 'AR/VR SDKs', 'Microcontrollers', 'Intrusion Prevention Systems', 'API Documentation', 'GDPR', 'Automation Scripting', 'Big Data', 'Physics Engines', 'Signal Integrity', 'API Security', 'Stakeholder Communication', 'Time-Frequency Analysis', 'Chip Packaging', 'Machine Learning Basics', 'Rendering Pipelines', 'Embedded Debugging Tools', 'Quantum Simulation', 'Couchbase', 'Real-Time Operating Systems', 'MSBuild', 'IoT Protocols (MQTT, CoAP, HTTP)', 'Terraform', 'TestNG', 'Virtualization', 'ARKit', 'Shaders', 'Probability', 'Query Optimization', 'Spring Boot', 'Artifactory', 'GitLab', 'BERT', 'SystemVerilog', 'Particle Systems', 'Security Policies', 'Load Balancing', 'Smart Contracts', 'Sketch', 'GitOps', 'Natural Language Processing', 'Prototyping Tools', 'Quantum Machine Learning', 'Git', 'Merkle Trees', 'Release Management', 'Quantum Sensing', 'Feature Engineering', 'Dependency Management', 'Edge Security Protocols', 'Predictive Analytics', 'Cloud Databases (AWS RDS, Azure SQL)', 'Mathematical Modeling', 'Smart Contract Security', 'Object Detection', 'Gesture Recognition', 'JUnit', 'Network Configuration', 'Data Architecture', 'Security Protocols', 'Sass', 'Cypress', 'ETL Processes', 'Layer 2 Solutions', 'Database Clustering', 'Mathematics', 'Software Design Patterns', 'Technical Documentation', 'VMware', 'Puzzle Design', 'Web3.js', 'Quantum Information Theory', 'Debugging and Troubleshooting', 'Quantum Cryptography', 'Virtualization Security', 'Real-Time Data Processing', 'MapReduce', 'Firmware Development', 'API Integration', 'Proof of Work', 'Field Repairs', 'Tableau', 'Disaster Recovery & Backup', 'Vision Systems', 'UVM', 'IoT Device Management', 'Recommendation Systems', 'Quantum Algorithms', 'Depth Estimation', 'Cross-Platform Development', 'CAD/CAM', 'CloudWatch', 'Cloud Integration', 'Web Accessibility Standards', 'Yield Enhancement', 'Big Data Solutions', 'Disaster Recovery Planning', 'Channel Estimation', 'Deep Learning', 'Frontend Security Best Practices', 'ZooKeeper', 'Collaboration Tools', 'Simulation Algorithms', 'WordPress', 'Boost.Asio', 'Industrial IoT', 'Hardhat', 'Quantum Verification', 'Radar', 'Control Theory', 'Autonomous Decision-Making', 'Intrusion Detection/Prevention Systems', 'Juniper OS', 'Embedded Networking', 'Data Governance', 'Data Serialization', 'Beamforming', 'Cloud Governance', 'Ethics in AI', 'Texture Mapping', 'Quantum Chemistry', 'DevOps for IoT', 'WooCommerce', 'Middleware (FMOD, Wwise)', 'OpenAPI', 'WebGL', 'Compliance Standards', 'Xcode', 'ZBrush Scripting', 'Theme Development', 'Machine Learning Integration', 'Zero Trust Architecture', 'NumPy', 'Cordova', 'Transfer Learning', 'Simulation', 'Wearable Tech', 'SLA Management', 'Signal Analysis', 'IoT', 'NIST', 'Transport Layer Security', 'C++', 'IDS/IPS', 'HBase', 'Quantum Error Correction', 'User Personas', 'Calibration', 'Interconnect Modeling', 'Incident Response', 'Go', 'Mobile Security', 'MIMO', 'Genetic Algorithms', 'Microservices', 'Actix', 'SpriteKit', 'Ruby', 'Nagios', 'Autonomous Vehicle Systems', 'Verilog', 'Security Information and Event Management', 'Linux Security', 'AR/VR Development', '5G Networks', 'jQuery', 'DRC/LVS', 'Time Management', 'OpenGL', 'Hugging Face', 'Animation Basics', 'Compliance Frameworks', 'Procedural Animation', 'Rigid Body Dynamics', 'C', 'Firewalls', 'Charting Techniques', 'Fault Tolerance', 'Network Documentation', 'Jenkins', 'Infographics', 'State Estimation', 'Resource Allocation', 'Security & Compliance', 'Dashboard Design', 'BYOD Policies', 'C/C++', 'Industrial Automation', 'Data Migration', 'Data Encryption', 'Data Loss Prevention', 'Django', 'CMOS Design', 'FastAPI', 'Ensemble Learning', 'Embedded Toolchains', 'Cisco IOS', 'Data Collaboration Tools', 'Service Level Agreements', 'Network Hardware', 'Data Ethics', 'Embedded Security', 'Feedback Implementation', 'Autonomous Navigation', 'Data Security', 'TOGAF', 'SQL Server', 'Three.js', 'Game Analytics', 'Risk Assessment', 'Wireframing', 'Smart Contract Auditing', 'Cloud Storage', 'Wi-Fi Security Protocols', 'ROS', 'SpaCy', 'Algorithm Design', 'Adobe Photoshop', 'Apache Spark', 'Intrusion Detection Systems', 'Network Administration', 'Decentralized Security Models', 'Dependency Parsing', 'QlikView', 'Motion Control', 'Cloud Migration', 'Pose Estimation', 'DevSecOps', 'Deployment Strategies', 'Network Monitoring', 'Chatbots', 'SerDes', 'Data Lakes', 'ITIL', 'Change Management', 'Journey Mapping', 'Machine Learning for IoT', 'OS Knowledge', 'Quality Assurance', 'Sidechains', 'Behavioral Modeling', 'NuGet', 'Autonomous Systems Design', 'Endpoint Detection and Response', 'Quantum Tomography', '.NET', 'Flutter', '2D/3D Graphics', 'Data Replication', 'Zero-Knowledge Proofs', 'Service Desk Support', 'Prometheus', 'Quantum Benchmarking', 'Metadata Design', 'EMI/EMC', 'Narrative Design', 'npm', 'Networking (TCP/IP, DNS, DHCP)', 'Optimization', 'System Administration', 'GitLab CI', 'Troubleshooting', 'Mobile Device Management', 'Wireless Protocols (BLE, Zigbee)', 'AR Filters', 'High Availability Systems', 'Data Classification', 'IoT Firmware', 'Sensor Integration', 'Statistical Modeling', 'Google Cloud Platform', 'Physical Design', 'Capacity Planning', 'Security Management', 'Computer Vision', 'Xamarin', 'AutoML', 'Istio', 'RF Design', 'Windows Security', 'Facility Maintenance', 'Automation Frameworks', 'Hadoop', 'Data Aggregation', 'Malware Analysis', 'Windows Server', 'D3.js', 'Personalization Strategies', 'SCADA Systems', 'Topic Modeling', 'Communication Protocols', 'Model Interpretability', 'ELK Stack', 'HTML5', 'Parallel Computing', 'In-App Purchases', 'QoS', 'Database Administration', 'Cassandra', 'Progressive Web Apps', 'CoreData', 'Storage Systems', 'Static Timing Analysis', 'Security Operations Center Tools', 'Quantum Metrology', 'WebXR', 'Bash Scripting', 'WebSockets', 'Adobe XD', 'Graphics APIs', 'Maya API', 'Data Visualization', 'Video Analysis', 'Monetization Strategies', 'Design Rule Checking', 'OpenAI API', 'Actuators', 'Logging (ELK Stack)', 'Consensus Algorithms', 'Azure Mobile Services', 'CI/CD Pipelines', 'Snowflake', 'Selenium', 'PCB Design Basics', 'Scalability & High Availability', 'Storage Management', 'PLC Programming', 'NAS', 'Avro', 'Automation', 'Redux', 'Linux/Unix', 'Lighting Techniques', 'Signal Routing', 'Haptic Feedback', 'Memory Interfaces', 'Card Sorting', 'Secure Socket Layer', 'Vulkan', 'Ad Integration', 'Experimental Design', 'Disaster Recovery', 'R', 'Hive', 'Cable Management', 'Bayesian Methods', 'SDN', 'KiCad', 'Data Center Operations', 'HTML/CSS', 'Low Power Design', 'Signal Modulation', 'Animation', 'Vulnerability Assessment', 'Data Architecture Frameworks', 'Flink', 'Cirq', 'Procedural Generation', 'Hyper-V', 'Optimization Techniques', 'Triggers', 'Layer Stackup', 'Logging Tools', 'Wireless Signals', 'Laravel', 'Data Exploration', 'Safety Protocols', 'Cluster Management', 'OrCAD', 'Bias Mitigation', 'Parasitic Extraction', 'Metal', 'Fault Simulation', 'NestJS', 'Game Economy', 'Cross-Browser Compatibility', 'A/B Testing', 'Cloud Security Best Practices', 'User-Centered Design', 'Bluetooth Security', 'Image Segmentation', 'Rendering Techniques', 'Agile Development', 'Distributed Computing', 'Place and Route', 'MySQL', 'CSS', 'Constraint-Based Verification', 'Risk Management', 'Apollo Client', 'Gradle', 'Taxonomy Development', 'ASIC Design', 'Threat Hunting', 'Hardware Debugging Tools', 'Houdini', 'Tezos', 'OpenCV', 'Accessibility', 'Wireless Security', 'Policy Implementation', 'Communication Systems', 'DAOs', 'Component Placement', 'IoT Architecture', 'Technical Leadership', 'Routing and Switching', 'Automation Tools (Ansible, Puppet, Chef)', 'Quantum Key Distribution', 'iOS Development', 'Blockchain Architecture', 'Splunk', 'Edge Analytics', 'Rate Limiting', 'Multilingual NLP', 'Identity and Access Management', 'Storytelling', 'Creative Writing', 'Thermal Management', 'KVM', 'IPv4/IPv6', 'Semantic Search', 'Shader Programming  (HLSL/GLSL)', 'Security Auditing', 'Database Design', 'Regression Analysis', 'Pneumatics', 'Automation Tools', 'Linear Algebra', 'UI/UX Design', 'Real-time Recommendations', 'Photogrammetry', 'Data Preprocessing', 'Topological Qubits', 'VHDL/Verilog', 'SEO Optimization', 'Human-Computer Interaction', 'Feature Extraction', 'GraphQL', 'ERC Standards', 'Quantum Entanglement', 'Network Performance Optimization', 'Hybrid Cloud Solutions', 'Security Frameworks (NIST, ISO 27001)', 'Spectral Analysis', 'MATLAB', 'Power Optimization', 'Views', 'Code Optimization', 'High Availability', 'Hybrid Models', 'Push Notifications', 'Embedded Python', 'Data Science', 'Wireshark', 'Sound Design', 'Configuration Management', 'Analog Electronics', 'Solana', 'IPFS', 'Interaction Design', 'Linux', 'Middleware Technologies (JBoss, Tomcat)', 'Team Leadership', 'Statistical Analysis', 'IoT Integration', 'Dialogue Systems', 'Monitoring Solutions', 'Testing', 'Autonomous Driving', 'Auditing', 'Data Indexing', 'Graph Algorithms', 'Kotlin', 'Web Application Security', 'Immersive Environments', 'Network Segmentation', 'Maven', 'AI Programming', 'Web Servers (Apache, Nginx)', 'Cloud Services (EC2, S3, Lambda)', 'CAP Theorem', 'Ganache', 'Noise Reduction', 'Adobe Illustrator', 'Quantum Measurement', 'BYOD Security', 'Real-Time Rendering', 'Application Sandboxing', 'Monitoring Tools (Prometheus, Grafana)', 'PowerShell', 'Infrastructure as Code', 'Data Transformation', 'Edge AI/ML', 'Role-Based Access Control', 'Dimensionality Reduction', 'Fairness in ML', 'Forensic Analysis', 'Prophet', 'IoT Protocols', 'CAD Tools', 'Bash', 'Socket Programming', 'Azure', 'Database Management', 'TypeScript', 'Audio Integration', 'Java', 'Trapped Ions', 'VR/AR Development', 'AI/ML Algorithms', 'Redundancy', 'A-Frame', 'Data Mining', 'PADS', 'Matplotlib', 'Floorplanning', 'API Monitoring', 'Smart Contract Testing', 'Combinatorics', 'API Gateway', 'GCP', 'Least Privilege Principle', 'Operating Systems', 'Dart', 'Ruby on Rails', 'Continuous Testing', 'Decentralized Applications', 'Power and Cooling Systems', 'OOP', 'Data Consistency', 'CloudFormation', 'SSRS', 'World Building', 'Tokenomics', 'Gas Optimization', 'Helm', 'Performance Tuning', 'System Architecture', 'Docker Compose', 'Google Cloud Security', 'Database Integration', 'Systems Design', 'Quantum Compilers', 'Ansible', 'Clock Domain Crossing', 'Information Retrieval', 'Sentiment Analysis', 'Defense in Depth', 'Ant', 'Sensors', 'Encryption Technologies', 'Quantum Mechanics', 'Infrastructure Management', 'Vulnerability Management', 'Groovy', 'Express.js', 'Blockchain Security', 'Numerical Analysis', 'Linux/Windows System Administration', 'Strategic Planning', '3D Graphics Programming', 'CAN Protocol', 'Logging', 'Collaboration Tools (Jira, Slack)', 'Maya', 'SQL Scripting', 'Design Documentation', 'Kalman Filters', 'HMI/SCADA', 'Evaluation Metrics', 'TensorFlow', 'Explainable AI', 'Network Optimization', 'XGBoost', 'Control Systems', '3D Animation', 'Quantum Phase Transitions', 'Web APIs', 'Heroku', 'Database Auditing', 'Scripting for Automation', 'Customer Service', 'Content Modeling', 'SD-WAN', 'Database Security', 'Heuristics', 'UX Writing', 'Flask/Django', 'Preventive Maintenance', 'Bitbucket', 'Azure Security', 'Photonic Qubits', 'PhoneGap', 'SoC Design', 'Data Visualization Frameworks', 'Quantum Programming Languages', 'Statistics', 'Node.js', 'AMBA', 'R-CNN', 'Entity Framework', 'Image Recognition', 'Power Integrity', 'Networking', 'Rust', 'Distributed Systems', 'Dynamic Programming', 'Hyperledger', 'Cocos2d', 'BOM Management', 'Scrum', 'Compliance Auditing', 'GPT', 'Perception Algorithms', 'Logic Synthesis', 'Edge Storage Solutions', 'ARM Processors', 'NoSQL', 'Assembly Language', 'Soldering', 'Big Data Technologies', 'Optimization Algorithms', 'Indexing', 'Embedded Linux', 'Multi-Factor Authentication', 'AI Integration', '3D Vision', 'Cryptocurrency Security', 'Cloud-Native Technologies', 'HTTP/HTTPS', 'AI for Autonomous Systems', 'Recommendation Algorithms', 'Perception Systems', 'Timing Analysis', 'Sequence-to-Sequence Models', 'YAML', 'API Testing', 'System Scalability', 'Hardware Interfaces', 'DFT', 'Ethical Hacking', 'Data Strategy', 'JSON/XML Handling', 'Data Integrity', 'Application Security', '.NET Core', 'Service Level Objectives', 'Data Privacy', 'Digital Circuit Design', 'TCL', 'FPGA', 'Mobile Game Development', 'LLM Fine-Tuning', 'Physics Simulation', 'Analog Design', 'Operating System Security', 'Debugging and Testing Tools', 'SQL Injection', 'Performance Profiling', 'Google Cloud Platform (GCP)', 'Orchestration', 'DevOps Principles', 'Real-time Systems', 'Game Documentation', 'Microservices Architecture', 'Angular', 'Question Answering', 'ARM Architecture', 'PostgreSQL', 'Backend Logic Development', 'API Gateways', 'DSA', 'DeFi Protocols', 'MongoDB', 'Mixed-Signal Design', 'Data Pipeline Design', 'Phishing Prevention', 'Gerber Files', 'Ransomware Protection', 'Network Virtualization', 'Event-Driven Architecture', 'JSON', 'Security Best Practices', 'Windows/Linux Servers', 'App Store Deployment', 'Python', 'Hibernate', 'Game Monetization', 'Hybrid Cloud', 'Single Sign-On', 'Data Pipelines', 'User Awareness Training', 'Phishing Simulations', 'Scripting', 'Edge Hardware Optimization', 'AWS', 'Energy Efficiency', 'Continuous Monitoring', 'VR Development', 'Cost Optimization', 'Networking for Multiplayer VR/AR', 'Keras', 'Firmware Updates', 'Simulink', 'Machine Learning Algorithms', 'Hardware Description Languages', 'Playtesting', 'Schematic Capture', 'Seaborn', 'Networking Protocols (HTTP, HTTPS, FTP)', 'IT Security', 'MetaMask', 'SOAP Web Services', 'Fault-Tolerant Quantum Computing', 'Equipment Maintenance', 'Network-on-Chip', 'System Hardening', 'Access Control', 'Motion Planning', 'Robot Operating System', 'Hardware Maintenance', 'Power Management', 'Security Compliance', 'IC Fabrication', 'Validation', 'Power BI', 'Simulation Tools (CARLA, AirSim)', 'Data Integration', 'Server Management', 'Pattern Recognition', 'Testbench Development', 'Big Data Integration', 'SAS', 'Shader Programming (HLSL/GLSL)', 'Visual Scripting', 'Ethereum', 'User Research', 'Budgeting', 'Quantum Field Theory', 'BGP', 'Group Policy', 'Plugin Development', 'VHDL', 'Statistical Signal Processing', 'Microarchitecture', 'Monitoring & Logging', 'Gutenberg Block Development', 'Business Continuity Planning', 'JavaScript', 'Make', 'Azure Resource Manager (ARM)', 'Backend Optimization', 'UML', 'Hardware Emulation', '5G', 'OWASP Top 10', 'YOLO', 'UX/UI Design for VR/AR', 'Core Data', 'Stereo Vision', 'LVS (Layout vs. Schematic)', 'Routing Techniques', 'React', 'Calibration Techniques', 'Geospatial Visualization', 'Logic Design', 'Deployment Manager', 'Blockchain Interoperability', 'Design for Manufacturability', 'UX Design', 'Game Marketing Basics', 'Interactive Dashboards', 'Encryption', 'Interrupt Handling', 'Path Planning', 'Corda', 'AWS Lambda', 'Excel', 'Data Partitioning', 'Quantum Control', 'SQL', 'Game Balancing', 'SSIS', 'User Flows', 'Solution Design', 'Oracles', 'Hypothesis Testing', 'Audio Processing', 'Motion Tracking', 'DNS', 'Autonomous Robotics', 'Quantum Topology', 'Edge Monitoring', 'AWS Security', 'DSP Processors', 'Cryptography', 'Data Mapping', 'Edge Computing', 'Simultaneous Localization and Mapping', 'Data Warehousing', 'Speech Processing', 'Embedded Security Protocols', 'Database Management (SQL/NoSQL)', 'Business Continuity', 'Anchor Framework', 'Replication', 'Information Visualization', 'Android SDK', 'Sensor Fusion', 'Service Workers', 'Data Cataloging', 'Analog/Digital Layout', '3D Scanning', 'Adaptive Filters'];
+
+      // Function to display suggestions as the user types
+      function getJobSuggestions() {
+        const input = document.getElementById("jobSearch");
+        const suggestionBox = document.getElementById("suggestions");
+        const suggestionList = document.getElementById("suggestionsList");
+        const query = input.value.toLowerCase().trim();
+
+        // Hide suggestions if the input is empty
+        if (query === "") {
+          suggestionBox.style.display = "none";
+          return;
+        }
+
+        // Filter the valid word list based on the current input
+        const filteredSuggestions = validWordList.filter((word) =>
+          word.toLowerCase().includes(query)
+        );
+
+        // Hide suggestion box if no matches found
+        if (filteredSuggestions.length === 0) {
+          suggestionBox.style.display = "none";
+          return;
+        }
+
+        // Generate suggestion list items
+        suggestionList.innerHTML = filteredSuggestions
+          .map(
+            (word) =>
+              `<li class="cursor-pointer hover:bg-gray-700 p-2" onclick="selectSuggestion('${word}')">${word}</li>`
+          )
+          .join("");
+
+        // Display the suggestion box
+        suggestionBox.style.display = "block";
       }
-      fetch("http://127.0.0.1:5000/predict", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ skills: skills })
-      })
-      .then(response => response.json())
-      .then(data => {
-        const resultsDiv = document.getElementById("results");
-        resultsDiv.innerHTML = "<h3 class='text-lg font-bold'>Suggested Job Roles, Click on role for Skill Learning Roadmap:</h3>";
-        if (data.strong_roles.length > 0) {
-          resultsDiv.innerHTML += `<div class="grid grid-cols-5 gap-4 mt-4">${
-            data.strong_roles.map(role =>
-              `<div class="bg-gray-800 p-4 rounded-lg text-center cursor-pointer hover:underline" onclick="getRoadmapForRole('${role}')">${role}</div>`
-            ).join("")
-          }</div>`;
-        } else {
-          resultsDiv.innerHTML += "<p>No strong matches found.</p>";
-        }
-        if (data.roadmap_suggestions && data.roadmap_suggestions.length > 0) {
-          resultsDiv.innerHTML += "<h3 class='text-lg font-bold mt-4'>Additional Roadmap Suggestions:</h3>";
-          resultsDiv.innerHTML += `<div class="grid grid-cols-5 gap-4 mt-4">${
-            data.roadmap_suggestions.map(role =>
-              `<div class="bg-gray-800 p-4 rounded-lg text-center cursor-pointer hover:underline" onclick="getRoadmapForRole('${role}')">${role}</div>`
-            ).join("")
-          }</div>`;
-        }
-      })
-      .catch(error => console.error("Error:", error));
-    }
 
-    // Called when a role is clicked; sends the role to the /roadmap endpoint
-    function getRoadmapForRole(role) {
-      const targetRole = role;
-      const roadmapDiv = document.getElementById("roadmap");
-      roadmapDiv.innerHTML = `<p>Fetching roadmap for <strong>${targetRole}</strong>...</p>`;
-      fetch("http://127.0.0.1:5000/roadmap", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ role: targetRole })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.roadmap) {
-          roadmapDiv.innerHTML = `<h3 class="text-lg font-bold mt-4">${targetRole}:</h3><pre></pre>`;
-          // Now generate a flowchart from the roadmap text
-          generateFlowchart(data.roadmap);
-        } else if (data.error) {
-          roadmapDiv.innerHTML = `<p>Error: ${data.error}</p>`;
-        }
-      })
-      .catch(error => {
-        console.error("Error:", error);
-        roadmapDiv.innerHTML = `<p>Error fetching roadmap.</p>`;
-      });
-    }
+      // Function to add a skill tag to the registered skills container
+      function addSkill(skill) {
+        // Avoid duplicates
+        if (
+          document.querySelector(
+            `#registeredSkills span[data-skill="${skill}"]`
+          )
+        )
+          return;
+        const skillTag = document.createElement("span");
+        skillTag.setAttribute("data-skill", skill);
+        skillTag.className =
+          "bg-gray-700 text-white px-2 py-1 rounded flex items-center";
+        skillTag.innerHTML = `${skill} <span class="ml-2 cursor-pointer" onclick="removeSkill('${skill}')">&times;</span>`;
+        document.getElementById("registeredSkills").appendChild(skillTag);
+      }
 
-    // Generate a flowchart by sending the roadmap text to the /process endpoint and rendering a Mermaid diagram
-    function generateFlowchart(text) {
-      fetch("http://127.0.0.1:5000/process", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: text })
-      })
-      .then(response => response.json())
-      .then(data => {
-        let mermaidDefinition = 'graph TD\n';
-        data.edges.forEach(edge => {
-          const fromNode = data.nodes.find(n => n.id === edge.from);
-          const toNode = data.nodes.find(n => n.id === edge.to);
-          mermaidDefinition += `  ${edge.from}["${fromNode.label.replace(/"/g, '\\"')}"] --> ${edge.to}["${toNode.label.replace(/"/g, '\\"')}"]\n`;
-        });
-        const flowchartContainer = document.getElementById('flowchartContainer');
-        flowchartContainer.innerHTML =
-          `<div class="mermaid">${mermaidDefinition}</div>`;
-        // Reveal the container
-        flowchartContainer.style.display = 'block';
-        try {
-          mermaid.init(undefined, document.querySelectorAll('.mermaid'));
-        } catch (initError) {
-          console.error("Error initializing Mermaid:", initError);
+      // Function to remove a registered skill tag
+      function removeSkill(skill) {
+        const skillElem = document.querySelector(
+          `#registeredSkills span[data-skill="${skill}"]`
+        );
+        if (skillElem) {
+          skillElem.remove();
         }
-      })
-      .catch(error => console.error("Error generating flowchart:", error));
-    }
-  </script>
-</body>
+      }
+
+      // Function called when a suggestion is clicked
+      function selectSuggestion(word) {
+        addSkill(word);
+        document.getElementById("jobSearch").value = "";
+        document.getElementById("suggestions").style.display = "none";
+      }
+
+      // Function to handle Enter key press in the search input
+      function handleKeyDown(event) {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          const input = document.getElementById("jobSearch");
+          const value = input.value.trim();
+          if (value !== "") {
+            addSkill(value);
+            input.value = "";
+            document.getElementById("suggestions").style.display = "none";
+          }
+        }
+      }
+
+      // Fetch job roles based on registered skills
+      function fetchJobRoles() {
+        // Get all skill tags from the registered skills container
+        const skillTags = document.querySelectorAll("#registeredSkills span");
+        const skills = Array.from(skillTags).map((tag) =>
+          tag.getAttribute("data-skill")
+        );
+
+        if (skills.length === 0) {
+          alert("Please enter at least one skill.");
+          return;
+        }
+        fetch("http://127.0.0.1:5000/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ skills: skills }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML =
+              "<h3 class='text-lg font-bold'>Suggested Job Roles, Click on role for Skill Learning Roadmap:</h3>";
+            if (data.strong_roles.length > 0) {
+              resultsDiv.innerHTML += `<div class="grid grid-cols-5 gap-4 mt-4">${
+                data.strong_roles
+                  .map(
+                    (role) =>
+                      `<div class="bg-gray-800 p-4 rounded-lg text-center cursor-pointer hover:underline" onclick="getRoadmapForRole('${role}')">${role}</div>`
+                  )
+                  .join("")
+              }</div>`;
+            } else {
+              resultsDiv.innerHTML += "<p>No strong matches found.</p>";
+            }
+            if (data.roadmap_suggestions && data.roadmap_suggestions.length > 0) {
+              resultsDiv.innerHTML +=
+                "<h3 class='text-lg font-bold mt-4'>Additional Roadmap Suggestions:</h3>";
+              resultsDiv.innerHTML += `<div class="grid grid-cols-5 gap-4 mt-4">${
+                data.roadmap_suggestions
+                  .map(
+                    (role) =>
+                      `<div class="bg-gray-800 p-4 rounded-lg text-center cursor-pointer hover:underline" onclick="getRoadmapForRole('${role}')">${role}</div>`
+                  )
+                  .join("")
+              }</div>`;
+            }
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      // Called when a role is clicked; sends the role to the /roadmap endpoint
+      function getRoadmapForRole(role) {
+        const targetRole = role;
+        const roadmapDiv = document.getElementById("roadmap");
+        roadmapDiv.innerHTML = `<p>Fetching roadmap for <strong>${targetRole}</strong>...</p>`;
+        fetch("http://127.0.0.1:5000/roadmap", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ role: targetRole }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.roadmap) {
+              roadmapDiv.innerHTML = `<h3 class="text-lg font-bold mt-4">${targetRole}:</h3><pre></pre>`;
+              // Now generate a flowchart from the roadmap text
+              generateFlowchart(data.roadmap);
+            } else if (data.error) {
+              roadmapDiv.innerHTML = `<p>Error: ${data.error}</p>`;
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            roadmapDiv.innerHTML = `<p>Error fetching roadmap.</p>`;
+          });
+      }
+
+      // Generate a flowchart by sending the roadmap text to the /process endpoint and rendering a Mermaid diagram
+      function generateFlowchart(text) {
+        fetch("http://127.0.0.1:5000/process", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: text }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            let mermaidDefinition = "graph TD\n";
+            data.edges.forEach((edge) => {
+              const fromNode = data.nodes.find((n) => n.id === edge.from);
+              const toNode = data.nodes.find((n) => n.id === edge.to);
+              mermaidDefinition += `  ${edge.from}["${fromNode.label.replace(
+                /"/g,
+                '\\"'
+              )}"] --> ${edge.to}["${toNode.label.replace(/"/g, '\\"')}"]\n`;
+            });
+            const flowchartContainer =
+              document.getElementById("flowchartContainer");
+            flowchartContainer.innerHTML = `<div class="mermaid">${mermaidDefinition}</div>`;
+            // Reveal the container
+            flowchartContainer.style.display = "block";
+            try {
+              mermaid.init(undefined, document.querySelectorAll(".mermaid"));
+            } catch (initError) {
+              console.error("Error initializing Mermaid:", initError);
+            }
+          })
+          .catch((error) => console.error("Error generating flowchart:", error));
+      }
+    </script>
+  </body>
 </html>
