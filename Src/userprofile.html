@@ -3,78 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile | NexTrail</title>
-    <link rel="stylesheet" href="./output.css">
-    <link rel="icon" type="image/x-icon" href="./img/NexTrail.png">
-    <script>
-        document.addEventListener("DOMContentLoaded", async () => {
-            try {
-                const response = await fetch("/api/user"); 
-                const user = await response.json();
+    <title>User Profile - NexTrail</title>
 
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script type="module">
+        // Import Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAXa9lbRtV_kcoVJILu4-egLc5BCOg5iTU",
+            authDomain: "woxenhackathon.firebaseapp.com",
+            projectId: "woxenhackathon",
+            storageBucket: "woxenhackathon.firebasestorage.app",
+            messagingSenderId: "416754221438",
+            appId: "1:416754221438:web:d8d77169804342fc4cf32f",
+            measurementId: "G-ET4XGLB295"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Fetch User Data
+        document.addEventListener("DOMContentLoaded", () => {
+            onAuthStateChanged(auth, async (user) => {
                 if (user) {
-                    document.getElementById("userName").textContent = user.name;
-                    document.getElementById("userEmail").textContent = user.email;
-                    document.getElementById("userPhone").textContent = user.phone;
-                    document.getElementById("userAddress").textContent = user.address;
-                    if (user.profilePic) {
-                        document.getElementById("profilePic").src = user.profilePic;
+                    const docRef = doc(db, "users", user.uid);
+                    const docSnap = await getDoc(docRef);
+
+                    if (docSnap.exists()) {
+                        const userData = docSnap.data();
+                        document.getElementById("userName").textContent = `${userData.firstName} ${userData.lastName}`;
+                        document.getElementById("userEmail").textContent = userData.email;
+                        document.getElementById("userOccupation").textContent = userData.occupation;
+                        document.getElementById("userContact").textContent = userData.contact;
+                        document.getElementById("userAge").textContent = userData.age;
+                        document.getElementById("userSkills").innerHTML = userData.skills.map(skill => `<span class='bg-blue-600 text-white px-2 py-1 rounded-lg mr-2'>${skill}</span>`).join('');
+                    } else {
+                        alert("No user data found.");
                     }
+                } else {
+                    window.location.href = "./signup.html";
                 }
-            } catch (error) {
-                console.error("Error fetching user data:", error);
-            }
+            });
         });
     </script>
-     <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-        
-        <!-- NexTrail Logo -->
-        <div class="text-2xl font-bold text-gray-100">
-            <a href="./index.html">
-                <img src="./img/NexTrail-removebg-preview.png" class="w-32 h-auto">
-            </a>
+</head>
+<body class="bg-black flex items-center justify-center min-h-screen text-white px-4 relative">
+
+    <!-- Background Video -->
+    <video class="absolute top-0 left-0 w-full h-full object-cover z-[-1]" autoplay loop muted playsinline>
+        <source src="https://videos.pexels.com/video-files/2792370/2792370-hd_1920_1080_30fps.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Gradient Overlay -->
+    <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-70"></div>
+
+    <!-- Profile Card -->
+    <div class="w-full max-w-lg bg-gray-800 bg-opacity-90 backdrop-blur-md p-8 rounded-xl shadow-lg opacity-95 relative z-10">
+
+        <!-- Logo -->
+        <div class="flex justify-center mb-6">
+            <img src="./img/NexTrail-removebg-preview.png" alt="Logo" class="w-24 md:w-32 h-auto">
         </div>
 
-        <!-- Navigation Menu -->
-        <nav class="space-x-6">
-            <a href="#" class="text-gray-300 hover:text-gray-100">Home</a>
-            <a href="#" class="text-gray-300 hover:text-gray-100">Job Trend</a>
-            <a href="#" class="text-gray-300 hover:text-gray-100">Community</a>
-            <a href="#" class="text-gray-300 hover:text-gray-100">Resume Flow</a>
-        </nav>
+        <h2 class="text-3xl font-bold text-center mb-6">User Profile</h2>
+
+        <div class="space-y-4">
+            <div><strong>Name:</strong> <span id="userName"></span></div>
+            <div><strong>Email:</strong> <span id="userEmail"></span></div>
+            <div><strong>Occupation:</strong> <span id="userOccupation"></span></div>
+            <div><strong>Contact:</strong> <span id="userContact"></span></div>
+            <div><strong>Age:</strong> <span id="userAge"></span></div>
+            <div><strong>Skills:</strong> <div id="userSkills" class="flex flex-wrap mt-2"></div></div>
+        </div>
+
+        <button onclick="window.location.href='./signup.html'" class="w-full mt-6 bg-blue-600 text-white p-3 rounded-lg font-semibold transition transform hover:bg-blue-700 hover:scale-105 shadow-md">
+            Logout
+        </button>
     </div>
-</head>
-<body class="bg-black text-gray-100 font-sans">
-
-<!-- Header Section -->
-<!-- <header class="bg-gray-700 shadow">
-    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-        <a href="./index.html"><img src="./img/NexTrail-removebg-preview.png" class="w-32 h-auto"></a>
-    </div>
-</header> 
-
-
-<!-- Main Profile Section -->
-<div class="container mx-auto px-6 py-12 flex">
-    <!-- Left Section: Profile Photo -->
-    <section class="w-1/3 bg-gray-700 p-8 rounded-lg shadow-lg text-center">
-        <h2 class="text-3xl font-bold mb-6">Profile Photo</h2>
-        <img id="profilePic" src="./img/NexTrail.png" class="w-32 h-32 rounded-full mx-auto mb-4" alt="Profile Picture">
-    </section>
-    
-    <!-- Right Section: User Details -->
-    <section class="w-2/3 bg-gray-700 p-8 rounded-lg shadow-lg ml-6">
-        <h2 class="text-3xl font-bold mb-6">User Details</h2>
-        <p class="mb-4"><strong>First Name:</strong> <span id="userName">Veer Pratap Singh</span></p>
-        <p class="mb-4"><strong>Last Name:</strong> <span id="userEmail">Ranawat</span></p>
-        <p class="mb-4"><strong>Email:</strong> <span id="userEmail">singhveer8379@gmail.com</span></p>
-        <p class="mb-4"><strong>Age:</strong> <span id="userEmail">19</span></p>
-        <p class="mb-4"><strong>Occupation:</strong> <span id="userEmail">Student</span></p>
-        <p class="mb-4"><strong>College:</strong> <span id="userPhone">VIT-AP</span></p>
-        <p class="mb-4"><strong>Phone:</strong> <span id="userPhone">1234567890</span></p>
-        
-    </section>
-</div>
 
 </body>
 </html>
