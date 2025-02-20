@@ -60,7 +60,12 @@
     <script>
         let currentCommunity = null;
         const communities = {};
-        const userName = "You";
+        let userName = "";
+
+        // Prompt for User Name on Page Load
+        window.onload = () => {
+            userName = prompt("Enter your name:", "User") || "User";
+        };
 
         // Function to create a new community
         function createCommunity() {
