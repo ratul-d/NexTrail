@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Job Trends Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="./job.css">
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Live Job Trends Dashboard</h1>
+
+        <div class="top-job">
+            <h2 id="top-job">🔝 Top Trending Job: Loading...</h2>
+        </div>
+
+        <button onclick="fetchJobTrends()">🔄 Update Trends</button>
+
+        <div class="search-bar">
+            <input type="text" id="jobSearch" placeholder="Search Job Role">
+            <button onclick="searchJob()">🔍 Search</button>
+        </div>
+
+        <canvas id="jobChart"></canvas>
+        <canvas id="lineChart"></canvas>
+        <canvas id="pieChart"></canvas>
+
+        <div id="jobTable"></div>
+    </div>
+
+    <script>
+        let jobData = [];
+
+        async function fetchJobTrends() {
+            const response = await fetch("/job-trends");
+            jobData = await response.json();
+            updateTopJob();
+            updateCharts();
+            updateTable();
+        }
+
+        function updateTopJob() {
+            document.getElementById("top-job").innerHTML = `🔝 Top Trending Job: <b>${jobData[0].role}</b> (${jobData[0].trend > 0 ? "+" : ""}${jobData[0].trend}%)`;
+        }
+
+        function updateCharts() {
+            const ctx = document.getElementById("jobChart").getContext("2d");
+            const lineCtx = document.getElementById("lineChart").getContext("2d");
+            const pieCtx = document.getElementById("pieChart").getContext("2d");
+
+            const labels = jobData.map(job => job.role);
+            const trends = jobData.map(job => job.trend);
+            const openings = jobData.map(job => job.openings);
+
+            new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: labels,
+                    datasets: [{ label: "Trend (%)", data: trends, backgroundColor: trends.map(val => val > 0 ? "green" : "red") }]
+                }
+            });
+
+            new Chart(lineCtx, {
+                type: "line",
+                data: {
+                    labels: labels,
+                    datasets: [{ label: "Job Openings", data: openings, borderColor: "blue", fill: false }]
+                }
+            });
+
+            new Chart(pieCtx, {
+                type: "pie",
+                data: {
+                    labels: labels,
+                    datasets: [{ data: openings, backgroundColor: ["red", "blue", "green", "yellow", "orange", "purple", "pink", "gray", "cyan", "brown"] }]
+                }
+            });
+        }
+
+        function updateTable() {
+            let tableHTML = "<table><tr><th>Job Role</th><th>Trend (%)</th><th>Openings</th></tr>";
+            jobData.forEach(job => {
+                tableHTML += `<tr>
+                    <td>${job.role}</td>
+                    <td style="color:${job.trend > 0 ? 'green' : 'red'};">${job.trend}%</td>
+                    <td>${job.openings}</td>
+                </tr>`;
+            });
+            tableHTML += "</table>";
+            document.getElementById("jobTable").innerHTML = tableHTML;
+        }
+
+        async function searchJob() {
+            const query = document.getElementById("jobSearch").value;
+            if (!query) return alert("Please enter a job role!");
+            
+            const response = await fetch(`/search-job?job=${query}`);
+            const job = await response.json();
+            
+            if (job.error) {
+                alert(job.error);
+                return;
+            }
+
+            alert(`📈 ${job.role} - Trend: ${job.trend}%, Openings: ${job.openings}`);
+        }
+
+        fetchJobTrends();
+    </script>
+</body>
+</html>
